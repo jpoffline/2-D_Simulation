@@ -22,11 +22,13 @@ public:
 	int getXGridNum();
 	int getYGridNum();
 // i is the x coordinate and j is the y coordinate/
-	double getVelocity(int i,int j); 
+	double getXVelocity(int i,int j); 
+	double getYVelocity(int i,int j);
 
 private:
 	int numOfXGrid; //total number of grids in x axis
 	int numOfYGrid; //total number of grids in y axis
-	double **initVelocity; //array to store the input velocities
+	double **xVelocity; //array to store the u_x
+	double **yVelocity; //array to store the u_y
 
 };

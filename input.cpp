@@ -18,11 +18,14 @@ Input::Input(){
 
 	infile >> numOfXGrid;
 	infile >> numOfYGrid;
-	initVelocity = new double*[numOfXGrid];
+	xVelocity = new double*[numOfXGrid];
+	yVelocity = new double*[numOfXGrid];
 	for(int i = 0; i < numOfXGrid; i++){
-		initVelocity[i] = new double[numOfYGrid];
+		xVelocity[i] = new double[numOfYGrid];
+		yVelocity[i] = new double[numOfYGrid];
 		for(int j = 0; j < numOfYGrid; j++){
-			infile >> initVelocity[i][j];
+			infile >> xVelocity[i][j];
+			infile >> yVelocity[i][j];
 		}
 	}
 	infile.close();
@@ -40,6 +43,10 @@ int Input::getYGridNum(){
 	return numOfYGrid;
 }
 
-double Input::getVelocity(int i, int j){
-	return initVelocity[i][j];
+double Input::getXVelocity(int i, int j){
+	return xVelocity[i][j];
+}
+
+double Input::getYVelocity(int i, int j){
+	return yVelocity[i][j];
 }
