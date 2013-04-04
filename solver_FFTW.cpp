@@ -346,7 +346,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 	fftw_execute(plan_c2r);
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid; j++){
-			v[i][j] = temp_Velocity[i][j];
+			v[i][j] = temp_Velocity[i][j]/(numOfXGrid*numOfYGrid);
 		}
 	}
 	/*===============================================
@@ -367,7 +367,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 	fftw_execute(plan_c2r);
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid; j++){
-			w[i][j] = temp_Velocity[i][j];
+			w[i][j] = temp_Velocity[i][j]/(numOfXGrid*numOfYGrid);
 		}
 	}
 
