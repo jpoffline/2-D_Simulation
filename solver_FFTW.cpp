@@ -14,10 +14,10 @@ Solver_FFTW::Solver_FFTW(){
 	Initializing arrays in real space
 	======================================================*/
 	v = new double*[numOfXGrid];
-	w = new double*[numOfYGrid];
-	temp_Velocity = new double*[numOfYGrid];
-	firstD_u = new double*[numOfYGrid];
-	secondD_u = new double*[numOfYGrid];
+	w = new double*[numOfXGrid];
+	temp_Velocity = new double*[numOfXGrid];
+	firstD_u = new double*[numOfXGrid];
+	secondD_u = new double*[numOfXGrid];
 	for(int i = 0; i < numOfXGrid; i++){
 		v[i] = new double[numOfYGrid];
 		w[i] = new double[numOfYGrid];
@@ -28,7 +28,8 @@ Solver_FFTW::Solver_FFTW(){
 			v[i][j] = initInput->getXVelocity(i,j);
 			w[i][j] = initInput->getYVelocity(i,j);
 			temp_Velocity[i][j] = 0;
-			temp_Velocity[i][j] = 0;
+			firstD_u[i][j] = 0;
+			secondD_u[i][j] = 0;
 		}
 	}
 
@@ -148,10 +149,16 @@ void Solver_FFTW::firstDerivative(){
 	/*=============================================
 	         calculate dv/dx
 	=============================================*/
-	for(int i = 0; i < numOfYGrid/2; i++){
+	for(int i = 0; i < numOfYGrid/2 + 1; i++){
 		for(int j = 0; j < numOfXGrid; j++){
-			firstD_U[j][i][0] = -2*PI*j/numOfXGrid*V[j][i][1];
-			firstD_U[j][i][0] = 2*PI*j/numOfXGrid*V[j][i][0];
+			if(j < numOfXGrid/2){
+				firstD_U[j][i][0] = -2*PI*j/numOfXGrid*V[j][i][1];
+				firstD_U[j][i][1] = 2*PI*j/numOfXGrid*V[j][i][0];
+			}
+			if(j > numOfXGrid/2){
+				firstD_U[j][i][0] = -2*PI*(j-numOfXGrid)/numOfXGrid*V[j][i][1];
+				firstD_U[j][i][1] = 2*PI*(j-numOfXGrid)/numOfXGrid*V[j][i][0];
+			}
 		}
 		firstD_U[numOfXGrid/2][i][0] = 0;
 		firstD_U[numOfXGrid/2][i][1] = 0;
@@ -183,10 +190,16 @@ void Solver_FFTW::firstDerivative(){
 	/*=================================================
 	      calculate dw/dx
 	================================================*/
-	for(int i = 0; i < numOfYGrid/2; i++){
+	for(int i = 0; i < numOfYGrid/2 + 1; i++){
 		for(int j = 0; j < numOfXGrid; j++){
-			firstD_U[j][i][0] = -2*PI*j/numOfXGrid*W[j][i][1];
-			firstD_U[j][i][0] = 2*PI*j/numOfXGrid*W[j][i][0];
+			if(j < numOfXGrid/2){
+				firstD_U[j][i][0] = -2*PI*j/numOfXGrid*W[j][i][1];
+				firstD_U[j][i][1] = 2*PI*j/numOfXGrid*W[j][i][0];
+			}
+			if(j > numOfXGrid/2){
+				firstD_U[j][i][0] = -2*PI*(j-numOfXGrid)/numOfXGrid*W[j][i][1];
+				firstD_U[j][i][1] = 2*PI*(j-numOfXGrid)/numOfXGrid*W[j][i][0];
+			}
 		}
 		firstD_U[numOfXGrid/2][i][0] = 0;
 		firstD_U[numOfXGrid/2][i][1] = 0;
@@ -226,8 +239,14 @@ void Solver_FFTW::secondDerivative(){
 	=====================================================*/
 	for(int i = 0; i < numOfYGrid/2 + 1;i++){
 		for(int j = 0; j < numOfXGrid; i++){
-			secondD_U[j][i][0] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*V[j][i][0];
-			secondD_U[j][i][1] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*V[j][i][1];
+			if(j <= numOfXGrid/2){
+				secondD_U[j][i][0] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*V[j][i][0];
+				secondD_U[j][i][1] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*V[j][i][1];
+			}
+			if(j > numOfXGrid/2){
+				secondD_U[j][i][0] = -(2*PI*(j-numOfXGrid)/numOfXGrid)*(2*PI*(j-numOfXGrid)/numOfXGrid)*V[j][i][0];
+				secondD_U[j][i][1] = -(2*PI*(j-numOfXGrid)/numOfXGrid)*(2*PI*(j-numOfXGrid)/numOfXGrid)*V[j][i][1];
+			}
 		}
 	}
 	fftw_execute(plan_secondD);
@@ -241,7 +260,7 @@ void Solver_FFTW::secondDerivative(){
 	    calculate d^2v/dy^2
 	=====================================================*/
 	for(int i = 0; i < numOfXGrid; i++){
-		for(int j = 0; j < numOfYGrid; j++){
+		for(int j = 0; j < numOfYGrid/2 + 1; j++){
 			secondD_U[i][j][0] =  -(2*PI*j/numOfYGrid)*(2*PI*j/numOfYGrid)*V[i][j][0];
 			secondD_U[i][j][1] =  -(2*PI*j/numOfYGrid)*(2*PI*j/numOfYGrid)*V[i][j][1];
 		}
@@ -258,8 +277,14 @@ void Solver_FFTW::secondDerivative(){
 	=====================================================*/
 	for(int i = 0; i < numOfYGrid/2 + 1;i++){
 		for(int j = 0; j < numOfXGrid; i++){
-			secondD_U[j][i][0] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*W[j][i][0];
-			secondD_U[j][i][1] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*W[j][i][1];
+			if(j <= numOfXGrid/2){
+				secondD_U[j][i][0] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*W[j][i][0];
+				secondD_U[j][i][1] = -(2*PI*j/numOfXGrid)*(2*PI*j/numOfXGrid)*W[j][i][1];
+			}
+			if(j > numOfXGrid/2){
+				secondD_U[j][i][0] = -(2*PI*(j-numOfXGrid)/numOfXGrid)*(2*PI*(j-numOfXGrid)/numOfXGrid)*W[j][i][0];
+				secondD_U[j][i][1] = -(2*PI*(j-numOfXGrid)/numOfXGrid)*(2*PI*(j-numOfXGrid)/numOfXGrid)*W[j][i][1];
+			}
 		}
 	}
 	fftw_execute(plan_secondD);
@@ -273,7 +298,7 @@ void Solver_FFTW::secondDerivative(){
 	    calculate d^2w/dy^2
 	=====================================================*/
 	for(int i = 0; i < numOfXGrid; i++){
-		for(int j = 0; j < numOfYGrid; j++){
+		for(int j = 0; j < numOfYGrid/2 + 1; j++){
 			secondD_U[i][j][0] =  -(2*PI*j/numOfYGrid)*(2*PI*j/numOfYGrid)*W[i][j][0];
 			secondD_U[i][j][1] =  -(2*PI*j/numOfYGrid)*(2*PI*j/numOfYGrid)*W[i][j][1];
 		}
