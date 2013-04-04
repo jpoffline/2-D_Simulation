@@ -27,22 +27,25 @@ private:
 	int numOfYGrid;
 
 	//These are the arrays in real space
-	double **ux;
-	double **uy;
-	double **ux_x;
-	double **ux_y;
-	double **uy_x;
-	double **uy_y;
-	double **ux_x_x;
-	double **ux_y_y;
-	double **uy_x_x;
-	double **ux_y_y;
+	double **v;
+	double **w;
+	double **temp_Velocity;
+	double **firstD_u;
+	double **secondD_u;
+	double **v_x;
+	double **v_y;
+	double **w_x;
+	double **w_y;
+	double **v_x_x;
+	double **v_y_y;
+	double **w_x_x;
+	double **w_y_y;
 
 	//These are the arrays in fourier space
 	fftw_complex **U;
 	fftw_complex **temp_U;
-	fftw_complex **U_1;
-	fftw_complex **U_2;
+	fftw_complex **firstD_U;
+	fftw_complex **secondD_U;
 
 	//FFT transform
 	fftw_plan plan_r2c;
