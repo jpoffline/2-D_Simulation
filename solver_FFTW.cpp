@@ -176,7 +176,7 @@ void Solver_FFTW::firstDerivative(){
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2; j++){
 			firstD_U[i][j][0] = -2*PI*j/numOfYGrid*V[i][j][1];
-			firstD_U[i][j][0] = 2*PI*j/numOfYGrid*V[i][j][0];
+			firstD_U[i][j][1] = 2*PI*j/numOfYGrid*V[i][j][0];
 		}
 		firstD_U[i][numOfYGrid/2][0] = 0;
 		firstD_U[i][numOfYGrid/2][1] = 0;
@@ -216,7 +216,7 @@ void Solver_FFTW::firstDerivative(){
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2; j++){
 			firstD_U[i][j][0] = -2*PI*j/numOfYGrid*W[i][j][1];
-			firstD_U[i][j][0] = 2*PI*j/numOfYGrid*W[i][j][0];
+			firstD_U[i][j][1] = 2*PI*j/numOfYGrid*W[i][j][0];
 		}
 		firstD_U[i][numOfYGrid/2][0] = 0;
 		firstD_U[i][numOfYGrid/2][1] = 0;
