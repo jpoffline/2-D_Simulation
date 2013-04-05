@@ -10,7 +10,7 @@ Input::Input(){
 	string fn;
 	cout << "Input the file name" << endl;
 	cin >> fn;
-	infileName >> INPUT_PATH >> fn;
+	infileName << INPUT_PATH << fn;
 	infile.open(infileName.str().c_str());
 	if(!infile){
 		cerr << "Error: unable to open input file: " << infile << endl;

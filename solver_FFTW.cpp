@@ -9,7 +9,6 @@ Solver_FFTW::Solver_FFTW(){
 	Input* initInput = new Input();
 	numOfXGrid = initInput->getXGridNum();
 	numOfYGrid = initInput->getYGridNum();
-
 	/*======================================================
 	Initializing arrays in real space
 	======================================================*/
@@ -32,7 +31,7 @@ Solver_FFTW::Solver_FFTW(){
 			secondD_u[i][j] = 0;
 		}
 	}
-
+	
 	/*=====================================================
 	Initializing first order derivatives
 	=====================================================*/
@@ -52,7 +51,7 @@ Solver_FFTW::Solver_FFTW(){
 			w_y[i][j] = 0;
 		}
 	}
-
+	
 	/*=====================================================
 	Initializing second order derivatives
 	=====================================================*/
@@ -101,15 +100,14 @@ Solver_FFTW::Solver_FFTW(){
 		}
 	}
 
-
+	
 	/**=====================================================
 	Initializing Plans
 	======================================================*/
-	plan_r2c = fftw_plan_dft_r2c_2d(numOfXGrid,numOfYGrid,*temp_Velocity,*temp_U,FFTW_MEASURE);
-	plan_c2r = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,*temp_U,*temp_Velocity,FFTW_MEASURE);
-	plan_firstD = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,*firstD_U,*firstD_u,FFTW_MEASURE);
-	plan_secondD = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,*secondD_U,*secondD_u,FFTW_MEASURE);
-
+	plan_r2c = fftw_plan_dft_r2c_2d(numOfXGrid,numOfYGrid,*temp_Velocity,*temp_U,FFTW_ESTIMATE);
+	plan_c2r = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,*temp_U,*temp_Velocity,FFTW_ESTIMATE);
+	plan_firstD = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,*firstD_U,*firstD_u,FFTW_ESTIMATE);
+	plan_secondD = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,*secondD_U,*secondD_u,FFTW_ESTIMATE);
 	/*======================================================
 	initializing output energy file
 	======================================================*/
