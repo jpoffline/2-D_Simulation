@@ -29,9 +29,9 @@ private:
 	//These are the arrays in real space
 	double **v;
 	double **w;
-	double **temp_Velocity;// temp is used in executing the plans
-	double **firstD_u;
-	double **secondD_u;
+	double *temp_Velocity;// temp is used in executing the plans
+	double *firstD_u;
+	double *secondD_u;
 
 	//arrays to store first order derivative
 	double **v_x;
@@ -48,9 +48,9 @@ private:
 	//These are the arrays in fourier space
 	fftw_complex **V;
 	fftw_complex **W;
-	fftw_complex **temp_U;
-	fftw_complex **firstD_U;
-	fftw_complex **secondD_U;
+	fftw_complex *temp_U;
+	fftw_complex *firstD_U;
+	fftw_complex *secondD_U;
 
 	//FFT transform
 	fftw_plan plan_r2c;
