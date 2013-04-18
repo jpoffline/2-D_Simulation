@@ -3,4 +3,4 @@
 
 This is the 2-D simulation of **Burgers equation**
 
-Francis Chen, University of Heidelberg.
+Francis Chen, University Heidelberg.
