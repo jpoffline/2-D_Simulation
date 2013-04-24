@@ -52,6 +52,9 @@ private:
 	fftw_complex *firstD_U;
 	fftw_complex *secondD_U;
 
+	//temporary files in storing derivatives from 1D to 2D
+	fftw_complex **temp;
+
 	//FFT transform
 	fftw_plan plan_r2c;
 	fftw_plan plan_c2r;

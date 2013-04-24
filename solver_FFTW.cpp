@@ -100,7 +100,10 @@ Solver_FFTW::Solver_FFTW(){
 		secondD_U[i][1] = 0;
 	}
 
-	
+	temp = (fftw_complex**)fftw_malloc(sizeof(fftw_complex*)*numOfXGrid);
+	for(int i = 0; i < numOfXGrid; i++){
+		temp[i] = (fftw_complex*)fftw_malloc(sizeof(fftw_complex)*(numOfYGrid/2+1));
+	}
 	/**=====================================================
 	Initializing Plans
 	======================================================*/
@@ -144,13 +147,6 @@ Solver_FFTW::~Solver_FFTW(){
 
 void Solver_FFTW::firstDerivative(){
 
-	/*=============================================
-	using a two dimensional array to store all the data.
-	=============================================*/
-	fftw_complex** temp = (fftw_complex**)fftw_malloc(sizeof(fftw_complex*)*numOfXGrid);
-	for(int i = 0; i < numOfXGrid; i++){
-		temp[i] = (fftw_complex*)fftw_malloc(sizeof(fftw_complex)*(numOfYGrid/2+1));
-	}
 	/*=============================================
 	         calculate dv/dx
 	=============================================*/
@@ -259,18 +255,12 @@ void Solver_FFTW::firstDerivative(){
 	}
 
 	/*===============================================*/
-	for(int i = 0; i < numOfXGrid; i++){
-		fftw_free(temp[i]);
-	}
 	return;
 }
 
 void Solver_FFTW::secondDerivative(){
 
-	fftw_complex** temp = (fftw_complex**)fftw_malloc(sizeof(fftw_complex*)*numOfXGrid);
-	for(int i = 0; i < numOfXGrid; i++){
-		temp[i] = (fftw_complex*)fftw_malloc(sizeof(fftw_complex)*(numOfYGrid/2+1));
-	}
+
 	/*=====================================================
 	    calculate d^2v/dx^2
 	=====================================================*/
@@ -372,9 +362,6 @@ void Solver_FFTW::secondDerivative(){
 	}
 
 	/*===================================================*/
-	for(int i = 0; i < numOfXGrid; i++){
-		fftw_free(temp[i]);
-	}
 	return;
 }
 

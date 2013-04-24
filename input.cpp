@@ -14,6 +14,7 @@ Input::Input(){
 	infile.open(infileName.str().c_str());
 	if(!infile){
 		cerr << "Error: unable to open input file: " << infile << endl;
+		exit(0);
 	}
 
 	infile >> numOfXGrid;
@@ -23,11 +24,16 @@ Input::Input(){
 	for(int i = 0; i < numOfXGrid; i++){
 		xVelocity[i] = new double[numOfYGrid];
 		yVelocity[i] = new double[numOfYGrid];
-		for(int j = 0; j < numOfYGrid; j++){
-			infile >> xVelocity[i][j];
-			infile >> yVelocity[i][j];
-		}
 	}
+
+	int x, y;
+	for(int i = 0; i < numOfXGrid*numOfYGrid; i++){
+		infile >> x;
+		infile >> y;
+		infile >> xVelocity[x][y];
+		infile >> yVelocity[x][y];
+	}
+
 	infile.close();
 	return;
 }
