@@ -4,7 +4,7 @@ This is the CPP for output data
 
 #include <output.h>
 
-Output::Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVelocity, int time){
+Output::Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVelocity, long int time){
 	ofstream outfile;
 	stringstream outfileName;
 	outfileName << OUTPUT_PATH << "Nx=" << numOfXGrid << "_Ny=" << numOfYGrid << "_t=" << time << ".txt";
