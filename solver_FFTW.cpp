@@ -218,6 +218,7 @@ void Solver_FFTW::firstDerivative(){
 		temp[numOfXGrid/2][i][0] = 0;
 		temp[numOfXGrid/2][i][1] = 0;
 	}
+
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
 			firstD_U[i*numOfYGrid+j][0] = temp[i][j][0];
@@ -250,7 +251,7 @@ void Solver_FFTW::firstDerivative(){
 	fftw_execute(plan_firstD);
 	for(int i = 0;i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid; j++){
-			w_y[i][j] = firstD_u[i*numOfYGrid+j]/(numOfXGrid*numOfYGrid);
+			w_y[i][j] =firstD_u[i*numOfYGrid+j]/(numOfXGrid*numOfYGrid);
 		}
 	}
 
@@ -338,6 +339,7 @@ void Solver_FFTW::secondDerivative(){
 			w_x_x[i][j] = secondD_u[i*numOfYGrid+j]/(numOfXGrid*numOfYGrid);
 		}
 	}
+
 
 	/*=====================================================
 	    calculate d^2w/dy^2
@@ -427,9 +429,9 @@ void Solver_FFTW::burgersSolver_FFTW(){
 	Time step iteration
 	==============================================*/
 
-	//First step, get V and W
 	for(long int t = 0; t < TIME_N -1;t++){
 
+		//First step, get V and W
 		for(int i = 0; i < numOfXGrid; i++){
 			for(int j = 0; j < numOfYGrid; j++){
 				temp_Velocity[i*numOfYGrid+j] = v[i][j];
@@ -479,8 +481,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 					Adams_w[1][i][j] = Adams_w[2][i][j];
 					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]);
 					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]);
-					v[i][j] = v[i][j] + TIME_STEP*(1.5*Adams_v[2][i][j] - 0.5*Adams_v[2][i][j]);
-					w[i][j] = w[i][j] + TIME_STEP*(1.5*Adams_w[2][i][j] - 0.5*Adams_w[2][i][j]);
+					v[i][j] = v[i][j] + TIME_STEP*(1.5*Adams_v[2][i][j] - 0.5*Adams_v[1][i][j]);
+					w[i][j] = w[i][j] + TIME_STEP*(1.5*Adams_w[2][i][j] - 0.5*Adams_w[1][i][j]);
 				}
 			}
 		}
@@ -507,8 +509,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 			double E = calculateE();
 			energy << log((t+1)*TIME_STEP) << "\t" << log(E) << endl;
 		}
-		
-		if((t+1)%10000 == 0){
+		if((t+1)%1 == 0){
 			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
 			cout << "t=" << t+1 << "_completed" << endl;	
 		}

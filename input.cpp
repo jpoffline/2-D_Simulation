@@ -33,7 +33,6 @@ Input::Input(){
 		infile >> xVelocity[x][y];
 		infile >> yVelocity[x][y];
 	}
-
 	infile.close();
 	return;
 }
