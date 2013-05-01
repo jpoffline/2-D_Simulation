@@ -167,8 +167,8 @@ void Solver_FFTW::firstDerivative(){
 
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			firstD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			firstD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			firstD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			firstD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_firstD);
@@ -191,14 +191,14 @@ void Solver_FFTW::firstDerivative(){
 	}
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			firstD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			firstD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			firstD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			firstD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_firstD);
 	for(int i = 0;i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid; j++){
-			v_y[i][j] =firstD_u[i*numOfYGrid+j]/(numOfXGrid*numOfYGrid);
+			v_y[i][j] = firstD_u[i*numOfYGrid+j]/(numOfXGrid*numOfYGrid);
 		}
 	}
 	/*=================================================
@@ -221,8 +221,8 @@ void Solver_FFTW::firstDerivative(){
 
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			firstD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			firstD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			firstD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			firstD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_firstD);
@@ -244,8 +244,8 @@ void Solver_FFTW::firstDerivative(){
 	}
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			firstD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			firstD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			firstD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			firstD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_firstD);
@@ -279,8 +279,8 @@ void Solver_FFTW::secondDerivative(){
 	}
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			secondD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			secondD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			secondD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			secondD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_secondD);
@@ -301,8 +301,8 @@ void Solver_FFTW::secondDerivative(){
 	}
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			secondD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			secondD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			secondD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			secondD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_secondD);
@@ -329,8 +329,8 @@ void Solver_FFTW::secondDerivative(){
 	}
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			secondD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			secondD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			secondD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			secondD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_secondD);
@@ -352,8 +352,8 @@ void Solver_FFTW::secondDerivative(){
 	}
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2+1; j++){
-			secondD_U[i*numOfYGrid+j][0] = temp[i][j][0];
-			secondD_U[i*numOfYGrid+j][1] = temp[i][j][1];
+			secondD_U[i*(numOfYGrid/2+1)+j][0] = temp[i][j][0];
+			secondD_U[i*(numOfYGrid/2+1)+j][1] = temp[i][j][1];
 		}
 	}
 	fftw_execute(plan_secondD);
@@ -392,8 +392,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 	fftw_execute(plan_r2c);
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2 + 1; j++){
-			V[i][j][0] = temp_U[i*numOfYGrid + j][0];
-			V[i][j][1] = temp_U[i*numOfYGrid + j][1];
+			V[i][j][0] = temp_U[i*(numOfYGrid/2+1) + j][0];
+			V[i][j][1] = temp_U[i*(numOfYGrid/2+1) + j][1];
 		}
 	}
 	fftw_execute(plan_c2r);
@@ -413,8 +413,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 	fftw_execute(plan_r2c);
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid/2 + 1; j++){
-			W[i][j][0] = temp_U[i*numOfYGrid+j][0];
-			W[i][j][1] = temp_U[i*numOfYGrid+j][1];
+			W[i][j][0] = temp_U[i*(numOfYGrid/2+1)+j][0];
+			W[i][j][1] = temp_U[i*(numOfYGrid/2+1)+j][1];
 		}
 	}
 	fftw_execute(plan_c2r);
@@ -440,8 +440,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		fftw_execute(plan_r2c);
 		for(int i = 0; i < numOfXGrid; i++){
 			for(int j = 0; j < numOfYGrid/2 + 1; j++){
-				V[i][j][0] = temp_U[i*numOfYGrid+j][0];
-				V[i][j][1] = temp_U[i*numOfYGrid+j][1];
+				V[i][j][0] = temp_U[i*(numOfYGrid/2+1)+j][0];
+				V[i][j][1] = temp_U[i*(numOfYGrid/2+1)+j][1];
 			}
 		}
 		for(int i = 0; i < numOfXGrid; i++){
@@ -452,8 +452,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		fftw_execute(plan_r2c);
 		for(int i = 0; i < numOfXGrid; i++){
 			for(int j = 0; j < numOfYGrid/2 + 1; j++){
-				W[i][j][0] = temp_U[i*numOfYGrid+j][0];
-				W[i][j][1] = temp_U[i*numOfYGrid+j][1];
+				W[i][j][0] = temp_U[i*(numOfYGrid/2+1)+j][0];
+				W[i][j][1] = temp_U[i*(numOfYGrid/2+1)+j][1];
 			}
 		}
 
@@ -509,7 +509,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 			double E = calculateE();
 			energy << log((t+1)*TIME_STEP) << "\t" << log(E) << endl;
 		}
-		if((t+1)%1 == 0){
+		if((t+1)%10000 == 0){
 			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
 			cout << "t=" << t+1 << "_completed" << endl;	
 		}
