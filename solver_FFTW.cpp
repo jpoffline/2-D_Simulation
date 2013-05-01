@@ -9,6 +9,10 @@ Solver_FFTW::Solver_FFTW(){
 	Input* initInput = new Input();
 	numOfXGrid = initInput->getXGridNum();
 	numOfYGrid = initInput->getYGridNum();
+	cout << "Input Finished" << endl;
+	cout << "Grids along x axis: " << numOfXGrid << endl;
+	cout << "Grids along y axis: " << numOfYGrid << endl;
+
 	/*======================================================
 	Initializing arrays in real space
 	======================================================*/
@@ -505,11 +509,11 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		//generate some outputs
 //		Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
 		
-		if((t+1)%10000 == 0){
+		if((t+1)%ENERGYOUTPUT == 0){
 			double E = calculateE();
 			energy << log((t+1)*TIME_STEP) << "\t" << log(E) << endl;
 		}
-		if((t+1)%10000 == 0){
+		if((t+1)%GENERATEOUTPUT == 0){
 			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
 			cout << "t=" << t+1 << "_completed" << endl;	
 		}

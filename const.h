@@ -12,3 +12,5 @@
 #define PI 3.1415926535897932
 #define INPUT_PATH "D:/Heidelberg/2-D_Executives/input/"
 #define OUTPUT_PATH "D:/Heidelberg/2-D_Executives/output/"
+#define ENERGYOUTPUT 10000
+#define GENERATEOUTPUT 20000
