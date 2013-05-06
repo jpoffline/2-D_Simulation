@@ -433,7 +433,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 	Time step iteration
 	==============================================*/
 
-	for(long int t = 0; t < TIME_N -1;t++){
+	for(long int t = 0; t < TIME_N;t++){
 
 		//First step, get V and W
 		for(int i = 0; i < numOfXGrid; i++){
@@ -509,11 +509,11 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		//generate some outputs
 //		Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
 		
-		if((t+1)%ENERGYOUTPUT == 0){
+		if((t+1)%ENERGY_OUTPUT == 0){
 			double E = calculateE();
 			energy << log((t+1)*TIME_STEP) << "\t" << log(E) << endl;
 		}
-		if((t+1)%GENERATEOUTPUT == 0){
+		if((t+1)%GENERATE_OUTPUT == 0){
 			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
 			cout << "t=" << t+1 << "_completed" << endl;	
 		}
