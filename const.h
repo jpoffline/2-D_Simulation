@@ -14,3 +14,4 @@
 #define OUTPUT_PATH "D:/Heidelberg/2-D_Executives/output/"
 #define ENERGY_OUTPUT 10000
 #define GENERATE_OUTPUT 20000
+#define THREADS 2

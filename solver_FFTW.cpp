@@ -76,6 +76,17 @@ Solver_FFTW::Solver_FFTW(){
 		}
 	}
 
+	/*========================================================
+	initializing multiple threads
+	==========================================================*/
+	if(fftw_init_threads()){
+		fftw_plan_with_nthreads(THREADS);
+		cout << "Using "<< THREADS << " threads" << endl;
+	}
+	else {
+		cout << "Using multiple threads failed" << endl;
+	}
+
 	/*=====================================================
 	Initializing arrays in fourier space
 	=====================================================*/
