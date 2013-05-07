@@ -1,5 +1,8 @@
 /********************************
 This is the CPP file of FFTW solver
+
+Author: Francis Chen
+Date: 04.03.2013
 **********************************/
 
 #include "solver_FFTW.h"
@@ -28,7 +31,7 @@ Solver_FFTW::Solver_FFTW(){
 		for(int j = 0; j < numOfYGrid; j++){
 			v[i][j] = initInput->getXVelocity(i,j);
 			w[i][j] = initInput->getYVelocity(i,j);
-			initE += v[i][j]*v[i][j] + w[i][j]*w[i][j];
+			initE += v[i][j]*v[i][j] + w[i][j]*w[i][j]; //calculating the initial energy
 		}
 	}
 
@@ -128,6 +131,7 @@ Solver_FFTW::Solver_FFTW(){
 	plan_c2r = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,temp_U,temp_Velocity,FFTW_ESTIMATE);
 	plan_firstD = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,firstD_U,firstD_u,FFTW_ESTIMATE);
 	plan_secondD = fftw_plan_dft_c2r_2d(numOfXGrid,numOfYGrid,secondD_U,secondD_u,FFTW_ESTIMATE);
+
 	/*======================================================
 	initializing output energy file
 	======================================================*/
@@ -497,6 +501,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		secondDerivative();
 
 		//Last step: Adams-Bashforth method
+
+		//when t=0, Euler's method is used
 		if(t == 0){
 			for(int i = 0; i < numOfXGrid; i++){
 				for(int j = 0; j < numOfYGrid; j++){
@@ -507,6 +513,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 				}
 			}
 		}
+
+		//when t=1, second order Adams method is used.
 		if(t == 1){
 			for(int i = 0; i < numOfXGrid; i++){
 				for(int j = 0; j < numOfYGrid; j++){
@@ -519,6 +527,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 				}
 			}
 		}
+
+		//when t>=2, third order Adams methods is used.
 		if(t >= 2){
 			for(int i = 0; i < numOfXGrid; i++){
 				for(int j = 0; j < numOfYGrid; j++){
@@ -538,10 +548,13 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		//generate some outputs
 //		Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
 		
+		//calculate energy in some steps, this energy is not rescaled
 		if((t+1)%ENERGY_OUTPUT == 0){
 			double E = calculateE();
 			energy << log((t+1)*TIME_STEP) << "\t" << log(E) << endl;
 		}
+
+		//generate output in some steps, this output is rescaled, see output.cpp
 		if((t+1)%GENERATE_OUTPUT == 0){
 			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1,initE);
 			cout << "t=" << t+1 << "_completed" << endl;	
@@ -549,7 +562,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 
 	}
 
-
+	//empty the memory
 	energy.close();
 	fftw_destroy_plan(plan_c2r);
 	fftw_destroy_plan(plan_r2c);

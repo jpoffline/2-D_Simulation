@@ -1,5 +1,8 @@
 /**********************************
 This is the main function of the simulation
+
+Author: Francis Chen
+Date: 04.03.2013
 *********************************/
 
 #include "solver_FFTW.h"

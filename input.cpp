@@ -1,10 +1,15 @@
 /******************************
 This is the CPP file of input data
+
+Author: Francis Chen
+Date: 04.03.2013
 *****************************/
 
 #include "input.h"
 
 Input::Input(){
+
+	//initialing input file
 	ifstream infile;
 	stringstream infileName;
 	string fn;
@@ -26,6 +31,7 @@ Input::Input(){
 		yVelocity[i] = new double[numOfYGrid];
 	}
 
+	//x and y are the coordinates
 	int x, y;
 	for(int i = 0; i < numOfXGrid*numOfYGrid; i++){
 		infile >> x;

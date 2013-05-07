@@ -1,5 +1,8 @@
 /****************************
 This is the CPP for output data
+
+Author: Francis Chen
+Date: 04.03.2013
 ******************************/
 
 #include <output.h>
@@ -7,8 +10,12 @@ This is the CPP for output data
 Output::Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVelocity, long int time,double energy){
 	ofstream outfile;
 	stringstream outfileName;
+
+	//output file name: Nx= _Ny= _t= .txt
 	outfileName << OUTPUT_PATH << "Nx=" << numOfXGrid << "_Ny=" << numOfYGrid << "_t=" << time << ".txt";
 	outfile.open(outfileName.str().c_str());
+
+	//inputting rescaled time.
 	outfile << time*TIME_STEP*sqrt(energy*(numOfYGrid-1)/(numOfXGrid-1))/(numOfXGrid-1) << endl;
 	for(int i = 0; i < numOfXGrid; i++){
 		for(int j = 0; j < numOfYGrid; j++){
