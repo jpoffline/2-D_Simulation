@@ -18,6 +18,7 @@ Solver_FFTW::Solver_FFTW(){
 	======================================================*/
 	v = new double*[numOfXGrid];
 	w = new double*[numOfXGrid];
+	initE = 0;
 	temp_Velocity = new double[numOfXGrid*numOfYGrid];
 	firstD_u = new double[numOfXGrid*numOfYGrid];
 	secondD_u = new double[numOfXGrid*numOfYGrid];
@@ -27,6 +28,7 @@ Solver_FFTW::Solver_FFTW(){
 		for(int j = 0; j < numOfYGrid; j++){
 			v[i][j] = initInput->getXVelocity(i,j);
 			w[i][j] = initInput->getYVelocity(i,j);
+			initE += v[i][j]*v[i][j] + w[i][j]*w[i][j];
 		}
 	}
 
@@ -133,6 +135,22 @@ Solver_FFTW::Solver_FFTW(){
 	stringstream fileNameOfE;
 	fileNameOfE << OUTPUT_PATH << "E" << ".txt";
 	energy.open(fileNameOfE.str().c_str());
+
+	/*======================================================
+	generating the readMe.txt file
+	======================================================*/
+
+	stringstream fileNameOfReadMe;
+	fileNameOfReadMe << OUTPUT_PATH << "readMe.txt";
+	readMe.open(fileNameOfReadMe.str().c_str());
+	readMe << "Nx=" << numOfXGrid << endl;
+	readMe << "Ny=" << numOfYGrid << endl;
+	readMe << "dt=" << TIME_STEP << endl;
+	readMe << "initial energy = " << initE << endl;
+	readMe << "Viscosity = "<< VISCOSITY << endl;
+	readMe << "Rescaled viscosity =" << VISCOSITY/sqrt(initE*(numOfXGrid-1)*(numOfYGrid-1));
+	readMe.close();
+
 
 	/*======================================================
 	Initializing Adams array.
@@ -439,7 +457,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		}
 	}
 
-	Output *out = new Output(numOfXGrid,numOfYGrid,v,w,0);
+	Output *out = new Output(numOfXGrid,numOfYGrid,v,w,0,initE);
 	/*==============================================
 	Time step iteration
 	==============================================*/
@@ -525,7 +543,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 			energy << log((t+1)*TIME_STEP) << "\t" << log(E) << endl;
 		}
 		if((t+1)%GENERATE_OUTPUT == 0){
-			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
+			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1,initE);
 			cout << "t=" << t+1 << "_completed" << endl;	
 		}
 

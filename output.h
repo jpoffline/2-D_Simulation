@@ -17,6 +17,6 @@ using namespace std;
 
 class Output{
 public:
-	Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVelocity, long int time);
+	Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVelocity, long int time,double energy);
 	~Output();
 };

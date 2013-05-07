@@ -25,6 +25,7 @@ public:
 private:
 	int numOfXGrid;
 	int numOfYGrid;
+	double initE;
 
 	//These are the arrays in real space
 	double **v;
@@ -64,4 +65,5 @@ private:
 	double ***Adams_v;
 	double ***Adams_w;
 	ofstream energy;
+	ofstream readMe;
 };
