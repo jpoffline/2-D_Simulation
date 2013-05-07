@@ -143,12 +143,12 @@ Solver_FFTW::Solver_FFTW(){
 	stringstream fileNameOfReadMe;
 	fileNameOfReadMe << OUTPUT_PATH << "readMe.txt";
 	readMe.open(fileNameOfReadMe.str().c_str());
-	readMe << "Nx=" << numOfXGrid << endl;
-	readMe << "Ny=" << numOfYGrid << endl;
-	readMe << "dt=" << TIME_STEP << endl;
-	readMe << "initial energy = " << initE << endl;
+	readMe << "Nx = " << numOfXGrid << endl;
+	readMe << "Ny = " << numOfYGrid << endl;
+	readMe << "dt = " << TIME_STEP << endl;
+	readMe << "Initial Energy = " << initE << endl;
 	readMe << "Viscosity = "<< VISCOSITY << endl;
-	readMe << "Rescaled viscosity =" << VISCOSITY/sqrt(initE*(numOfXGrid-1)*(numOfYGrid-1));
+	readMe << "Rescaled Viscosity =" << VISCOSITY/sqrt(initE*(numOfXGrid-1)*(numOfYGrid-1));
 	readMe.close();
 
 
