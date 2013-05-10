@@ -20,6 +20,7 @@ public:
 	void burgersSolver_FFTW();
 	void firstDerivative();
 	void secondDerivative();
+	void samplingForce();
 	double calculateE();
 
 private:
@@ -45,6 +46,10 @@ private:
 	double **v_y_y;
 	double **w_x_x;
 	double **w_y_y;
+
+	//arrays to store the force
+	double **externalFx;
+	double **externalFy;
 
 	//These are the arrays in fourier space
 	fftw_complex **V;

@@ -82,6 +82,21 @@ Solver_FFTW::Solver_FFTW(){
 	}
 
 	/*========================================================
+	Initializing the forces
+	========================================================*/
+	externalFx = new double*[numOfXGrid];
+	externalFy = new double*[numOfXGrid];
+	for(int i = 0;i < numOfXGrid; i++){
+		externalFx[i] = new double[numOfYGrid];
+		externalFy[i] = new double[numOfYGrid];
+		for(int j = 0;j < numOfYGrid; j++){
+			externalFx[i][j] = 0;
+			externalFy[i][j] = 0;
+		}
+	}
+
+
+	/*========================================================
 	initializing multiple threads
 	==========================================================*/
 	if(fftw_init_threads()){
@@ -417,6 +432,20 @@ double Solver_FFTW::calculateE(){
 
 }
 
+
+// A function to sample the random force
+void Solver_FFTW::samplingForce(){
+	for(int i = 0;i < numOfXGrid; i++){
+		for(int j = 0; j < numOfYGrid; j++){
+			externalFx[i][j] = 0;
+			externalFy[i][j] = 0;
+		}
+	}
+	return;
+
+}
+
+// A function to solver Burgers equation
 void Solver_FFTW::burgersSolver_FFTW(){
 	/*===============================================
 		get V at t=0
@@ -494,20 +523,31 @@ void Solver_FFTW::burgersSolver_FFTW(){
 			}
 		}
 
-		//Second step: get v_x,v_y,w_x,w_y
+		/*=============================
+		Second step: get v_x,v_y,w_x,w_y
+		/*=============================*/
 		firstDerivative();
 
-		//Third step: get v_x_x,v_y_y,w_x_x,w_y_y
+		/*=============================
+		Third step: get v_x_x,v_y_y,w_x_x,w_y_y
+		=============================*/
 		secondDerivative();
-
-		//Last step: Adams-Bashforth method
+		
+		/*=============================
+		Forth step: sampling force
+		=============================*/
+		samplingForce();
+		
+		/*=============================
+		Last step: Adams-Bashforth method
+		=============================*/
 
 		//when t=0, Euler's method is used
 		if(t == 0){
 			for(int i = 0; i < numOfXGrid; i++){
 				for(int j = 0; j < numOfYGrid; j++){
-					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]);
-					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]);
+					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
+					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
 					v[i][j] = v[i][j] + TIME_STEP*Adams_v[2][i][j];
 					w[i][j] = w[i][j] + TIME_STEP*Adams_w[2][i][j];
 				}
@@ -520,8 +560,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 				for(int j = 0; j < numOfYGrid; j++){
 					Adams_v[1][i][j] = Adams_v[2][i][j];
 					Adams_w[1][i][j] = Adams_w[2][i][j];
-					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]);
-					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]);
+					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
+					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
 					v[i][j] = v[i][j] + TIME_STEP*(1.5*Adams_v[2][i][j] - 0.5*Adams_v[1][i][j]);
 					w[i][j] = w[i][j] + TIME_STEP*(1.5*Adams_w[2][i][j] - 0.5*Adams_w[1][i][j]);
 				}
@@ -536,8 +576,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 					Adams_w[0][i][j] = Adams_w[1][i][j];
 					Adams_v[1][i][j] = Adams_v[2][i][j];
 					Adams_w[1][i][j] = Adams_w[2][i][j];
-					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]);
-					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]);
+					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
+					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
 					v[i][j] = v[i][j] + TIME_STEP*(23.0/12.0*Adams_v[2][i][j] - 4.0/3.0*Adams_v[1][i][j] + 5.0/12.0*Adams_v[0][i][j]);
 					w[i][j] = w[i][j] + TIME_STEP*(23.0/12.0*Adams_w[2][i][j] - 4.0/3.0*Adams_w[1][i][j] + 5.0/12.0*Adams_w[0][i][j]);
 

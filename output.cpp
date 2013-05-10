@@ -15,6 +15,9 @@ Output::Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVel
 	outfileName << OUTPUT_PATH << "Nx=" << numOfXGrid << "_Ny=" << numOfYGrid << "_t=" << time << ".txt";
 	outfile.open(outfileName.str().c_str());
 
+	/*================================================================================
+	code for the output after rescaling
+	=================================================================================*/
 	//inputting rescaled time.
 	outfile << time*TIME_STEP*sqrt(energy*(numOfYGrid-1)/(numOfXGrid-1))/(numOfXGrid-1) << endl;
 	for(int i = 0; i < numOfXGrid; i++){
@@ -23,6 +26,17 @@ Output::Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVel
 			outfile << xVelocity[i][j]/sqrt(energy*(numOfYGrid-1)/(numOfXGrid-1)) << "\t" << yVelocity[i][j]/sqrt(energy*(numOfYGrid-1)/(numOfXGrid-1)) << endl;
 		}
 	}
+
+	/*================================================================================
+	code for the output before rescaling
+	=================================================================================*/
+	/*
+	for(int i = 0; i < numOfXGrid; i++){
+		for(int j = 0; j < numOfYGrid; j++){
+			outfile << i << "\t" << j << "\t" << xVelocity[i][j] << "\t" << yVelocity[i][j] << endl;
+		}
+	}
+	*/
 	outfile.close();
 	return;
 }
