@@ -101,10 +101,11 @@ Solver_FFTW::Solver_FFTW(){
 	==========================================================*/
 	if(fftw_init_threads()){
 		fftw_plan_with_nthreads(THREADS);
-		cout << "Using "<< THREADS << " threads" << endl;
+		cout << "Using "<< THREADS << " threads" << endl << endl;
 	}
 	else {
 		cout << "Using multiple threads failed" << endl;
+		exit(0);
 	}
 
 	/*=====================================================
@@ -490,7 +491,7 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		}
 	}
 
-	Output *out = new Output(numOfXGrid,numOfYGrid,v,w,0,initE);
+	Output *out = new Output(numOfXGrid,numOfYGrid,v,w,0,initE,_VELOCITY);
 	/*==============================================
 	Time step iteration
 	==============================================*/
@@ -527,6 +528,10 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		Second step: get v_x,v_y,w_x,w_y
 		/*=============================*/
 		firstDerivative();
+		if(t == 0){
+			Output* out_1 = new Output(numOfXGrid,numOfYGrid,v_x,v_y,0,initE,_DERIVATIVEv);
+			Output* out_2 = new Output(numOfYGrid,numOfYGrid,w_x,w_y,0,initE,_DERIVATIVEw);
+		}
 
 		/*=============================
 		Third step: get v_x_x,v_y_y,w_x_x,w_y_y
@@ -591,12 +596,15 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		//calculate energy in some steps, this energy is not rescaled
 		if((t+1)%ENERGY_OUTPUT == 0){
 			double E = calculateE();
-			energy << log((t+1)*TIME_STEP) << "\t" << log(E) << endl;
+			energy << log((t+1)*TIME_STEP) + log(sqrt(initE*(numOfYGrid-1)/(numOfXGrid-1))/(numOfXGrid-1)) << "\t";
+			energy << log(E) - log(initE*(numOfYGrid-1)/(numOfXGrid-1))<< endl;
 		}
 
 		//generate output in some steps, this output is rescaled, see output.cpp
 		if((t+1)%GENERATE_OUTPUT == 0){
-			Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1,initE);
+			Output* out_1 = new Output(numOfXGrid,numOfYGrid,v,w,t+1,initE,_VELOCITY);
+			Output* out_2 = new Output(numOfXGrid,numOfYGrid,v_x,v_y,t+1,initE,_DERIVATIVEv);
+			Output* out_3 = new Output(numOfYGrid,numOfYGrid,w_x,w_y,t+1,initE,_DERIVATIVEw);
 			cout << "t=" << t+1 << "_completed" << endl;	
 		}
 

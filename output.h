@@ -15,8 +15,16 @@ Date: 04.03.2013
 
 using namespace std;
 
+enum output_Type{
+	_VELOCITY,
+	_DERIVATIVEv,
+	_DERIVATIVEw,
+	_DDERIVATIVEv,
+	_DDERIVATIVEw
+};
+
 class Output{
 public:
-	Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVelocity, long int time,double energy);
+	Output(int numOfXGrid, int numOfYGrid, double **xVelocity, double **yVelocity, long int time,double energy,output_Type fileType);
 	~Output();
 };
