@@ -20,6 +20,7 @@ public:
 	void burgersSolver_FFTW();
 	void firstDerivative();
 	void secondDerivative();
+	void adamsMethod(int t);
 	void samplingForce();
 	double calculateE();
 

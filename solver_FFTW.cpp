@@ -421,6 +421,54 @@ void Solver_FFTW::secondDerivative(){
 }
 
 
+//function of Adams Bashforth method
+void Solver_FFTW::adamsMethod(int t){
+		//when t=0, Euler's method is used
+		if(t == 0){
+			for(int i = 0; i < numOfXGrid; i++){
+				for(int j = 0; j < numOfYGrid; j++){
+					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
+					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
+					v[i][j] = v[i][j] + TIME_STEP*Adams_v[2][i][j];
+					w[i][j] = w[i][j] + TIME_STEP*Adams_w[2][i][j];
+				}
+			}
+		}
+
+		//when t=1, second order Adams method is used.
+		if(t == 1){
+			for(int i = 0; i < numOfXGrid; i++){
+				for(int j = 0; j < numOfYGrid; j++){
+					Adams_v[1][i][j] = Adams_v[2][i][j];
+					Adams_w[1][i][j] = Adams_w[2][i][j];
+					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
+					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
+					v[i][j] = v[i][j] + TIME_STEP*(1.5*Adams_v[2][i][j] - 0.5*Adams_v[1][i][j]);
+					w[i][j] = w[i][j] + TIME_STEP*(1.5*Adams_w[2][i][j] - 0.5*Adams_w[1][i][j]);
+				}
+			}
+		}
+
+		//when t>=2, third order Adams methods is used.
+		if(t >= 2){
+			for(int i = 0; i < numOfXGrid; i++){
+				for(int j = 0; j < numOfYGrid; j++){
+					Adams_v[0][i][j] = Adams_v[1][i][j];
+					Adams_w[0][i][j] = Adams_w[1][i][j];
+					Adams_v[1][i][j] = Adams_v[2][i][j];
+					Adams_w[1][i][j] = Adams_w[2][i][j];
+					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
+					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
+					v[i][j] = v[i][j] + TIME_STEP*(23.0/12.0*Adams_v[2][i][j] - 4.0/3.0*Adams_v[1][i][j] + 5.0/12.0*Adams_v[0][i][j]);
+					w[i][j] = w[i][j] + TIME_STEP*(23.0/12.0*Adams_w[2][i][j] - 4.0/3.0*Adams_w[1][i][j] + 5.0/12.0*Adams_w[0][i][j]);
+
+				}
+			}
+		}
+
+		return;
+}
+
 // A function to calculate the energy
 double Solver_FFTW::calculateE(){
 	double E = 0;
@@ -528,10 +576,12 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		Second step: get v_x,v_y,w_x,w_y
 		/*=============================*/
 		firstDerivative();
+		/*
 		if(t == 0){
 			Output* out_1 = new Output(numOfXGrid,numOfYGrid,v_x,v_y,0,initE,_DERIVATIVEv);
 			Output* out_2 = new Output(numOfYGrid,numOfYGrid,w_x,w_y,0,initE,_DERIVATIVEw);
 		}
+		*/
 
 		/*=============================
 		Third step: get v_x_x,v_y_y,w_x_x,w_y_y
@@ -546,52 +596,8 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		/*=============================
 		Last step: Adams-Bashforth method
 		=============================*/
-
-		//when t=0, Euler's method is used
-		if(t == 0){
-			for(int i = 0; i < numOfXGrid; i++){
-				for(int j = 0; j < numOfYGrid; j++){
-					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
-					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
-					v[i][j] = v[i][j] + TIME_STEP*Adams_v[2][i][j];
-					w[i][j] = w[i][j] + TIME_STEP*Adams_w[2][i][j];
-				}
-			}
-		}
-
-		//when t=1, second order Adams method is used.
-		if(t == 1){
-			for(int i = 0; i < numOfXGrid; i++){
-				for(int j = 0; j < numOfYGrid; j++){
-					Adams_v[1][i][j] = Adams_v[2][i][j];
-					Adams_w[1][i][j] = Adams_w[2][i][j];
-					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
-					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
-					v[i][j] = v[i][j] + TIME_STEP*(1.5*Adams_v[2][i][j] - 0.5*Adams_v[1][i][j]);
-					w[i][j] = w[i][j] + TIME_STEP*(1.5*Adams_w[2][i][j] - 0.5*Adams_w[1][i][j]);
-				}
-			}
-		}
-
-		//when t>=2, third order Adams methods is used.
-		if(t >= 2){
-			for(int i = 0; i < numOfXGrid; i++){
-				for(int j = 0; j < numOfYGrid; j++){
-					Adams_v[0][i][j] = Adams_v[1][i][j];
-					Adams_w[0][i][j] = Adams_w[1][i][j];
-					Adams_v[1][i][j] = Adams_v[2][i][j];
-					Adams_w[1][i][j] = Adams_w[2][i][j];
-					Adams_v[2][i][j] = -(v[i][j]*v_x[i][j] + w[i][j]*v_y[i][j]) + VISCOSITY*(v_x_x[i][j] + v_y_y[i][j]) + externalFx[i][j];
-					Adams_w[2][i][j] = -(v[i][j]*w_x[i][j] + w[i][j]*w_y[i][j]) + VISCOSITY*(w_x_x[i][j] + w_y_y[i][j]) + externalFy[i][j];
-					v[i][j] = v[i][j] + TIME_STEP*(23.0/12.0*Adams_v[2][i][j] - 4.0/3.0*Adams_v[1][i][j] + 5.0/12.0*Adams_v[0][i][j]);
-					w[i][j] = w[i][j] + TIME_STEP*(23.0/12.0*Adams_w[2][i][j] - 4.0/3.0*Adams_w[1][i][j] + 5.0/12.0*Adams_w[0][i][j]);
-
-				}
-			}
-		}
-
-		//generate some outputs
-//		Output* out = new Output(numOfXGrid,numOfYGrid,v,w,t+1);
+		adamsMethod(t);
+		
 		
 		//calculate energy in some steps, this energy is not rescaled
 		if((t+1)%ENERGY_OUTPUT == 0){
