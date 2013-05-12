@@ -15,6 +15,17 @@ Date: 04.03.2013
 
 using namespace std;
 
+/*===============================
+Explanations to the flags(output type):
+
+_VELOCITY: generating output for velocities.
+_DERIVATIVEv: generating output for v_x and v_y.
+_DERIVATIVEw: generating output for w_x and w_y.
+_DDERIVATIVEv: generating output for v_x_x and v_y_y.
+_DDERIVATIVEw: generating output for w_x_x and w_y_y.
+
+===============================*/
+
 enum output_Type{
 	_VELOCITY,
 	_DERIVATIVEv,

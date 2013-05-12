@@ -7,6 +7,8 @@ Date: 04.03.2013
 
 #include "solver_FFTW.h"
 
+
+//constructor of the class
 Solver_FFTW::Solver_FFTW(){
 	/*===============================================*/
 	Input* initInput = new Input();
@@ -198,6 +200,8 @@ Solver_FFTW::Solver_FFTW(){
 Solver_FFTW::~Solver_FFTW(){
 }
 
+
+//function to calculate the first order derivatives
 void Solver_FFTW::firstDerivative(){
 
 	/*=============================================
@@ -312,6 +316,8 @@ void Solver_FFTW::firstDerivative(){
 	return;
 }
 
+
+//function to calculate the second order derivatives
 void Solver_FFTW::secondDerivative(){
 
 
