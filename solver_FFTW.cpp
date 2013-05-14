@@ -593,6 +593,12 @@ void Solver_FFTW::burgersSolver_FFTW(){
 		Third step: get v_x_x,v_y_y,w_x_x,w_y_y
 		=============================*/
 		secondDerivative();
+		/*
+		if(t == 0){
+			Output* out_1 = new Output(numOfXGrid,numOfYGrid,v_x_x,v_y_y,0,initE,_DDERIVATIVEv);
+			Output* out_2 = new Output(numOfYGrid,numOfYGrid,w_x_x,w_y_y,0,initE,_DDERIVATIVEw);
+		}
+		*/
 		
 		/*=============================
 		Forth step: sampling force
